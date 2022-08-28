@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpine Js</title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="app.js"></script>
 </head>
 <body>
 
@@ -18,17 +19,156 @@
         <p x-html="html"></p>
     </div>
 
+
     <!-- x-data with method -->
     <div x-data="{name: 'Arsalan', change() { this.name = 'Ahmed' }}">
         <p x-text="name" @click="change()"></p>
     </div>
 
     <div x-data="{open: false, toggle() { this.open = !this.open }}">
-
-        <button @click="toggle()">Click Me</button>
+        <button @click="toggle">Click Me</button>
         <p x-show="open" > I am Toggle paragraph... </p>
-
     </div>
     
+
+    <!-- Re-useable Data -->
+
+    <div x-data="dropdown">
+        <button @click="toggle"> Show/Hide </button>
+        <div x-show="open">
+            This is content of dropdown...
+        </div>
+    </div>
+
+    <div x-data="dropdown">
+        <button @click="toggle"> Show/Hide </button>
+        <div x-show="open">
+            This is content of dropdown...
+        </div>
+    </div>
+
+    <!-- Dataless component -->
+    <!-- <div x-data @click="alert('Something...')"> Click me </div> -->
+
+    <!-- Data comming from store -->
+    <div x-data x-text="$store.users.posts"></div>
+
+    <!-- X-init -->
+    <div x-init="console.log('Running')"></div>
+    <div x-data="{
+        init() {
+            console.log('Running...')
+        }
+    }"></div>
+
+
+
+    <!-- Getter & Setter -->
+    <div x-data="{
+        open: false,
+        get isOpen() {
+            return this.open
+        },
+        set isOpen(open) {
+            this.open = open
+        },
+        toggle() {
+            this.isOpen = !this.isOpen
+        }
+    }">
+        <button @click="toggle"> Clik Me </button>
+        <div x-show="open"> I am getter and setter... </div>
+    </div>
+
+
+    <!-- X-show X-transition -->
+
+    <div x-data="{
+        open: false,
+        toggle() {
+            this.open = !this.open
+        }
+    }">
+        <button @click="toggle"> Click Me </button>
+        <div x-show="open" 
+             x-transition.enter.duration.200ms
+             x-transition.leave.duration.2000ms
+            > Data with transition </div>
+    </div>
+
+
+    <!-- X-if -->
+
+    <div x-data="{
+        open: false,
+        toggle() {
+            this.open = !this.open
+        }
+    }">
+        <button @click="toggle" > Show/Hide </button>
+        <template x-if="open">
+            <div> This is content inside x-if </div>
+        </template>
+    </div>
+
+    <!-- X-for -->
+
+    <div x-data="{
+        users: [{id: 1, name: 'Arsalan Ahmed'}, {id: 2, name: 'Ahmed Shah'}]
+    }">
+        <template x-for="(user, index) in users" :key="user.id">
+            <p x-text="index + ': ' + user.id + ' - ' + user.name"></p>
+        </template>
+    </div>
+
+    <!-- X-bind -->
+
+    <div x-data="{
+        clicked: false,
+        color: 'yellow'
+    }">
+        <button :class="clicked ? color : ''" @click="clicked = !clicked"> BG Yellow </button>
+    </div>
+    <style> 
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
+
+    <!-- x-bind style -->
+    <div x-data="{clicked: false, color: 'yellow' }">
+        <button :style="{backgroundColor: clicked ? color : '' }" @click="clicked = !clicked"> CSS Style </button>
+    </div>
+
+    <!-- x-bind ID -->
+    <div x-data="{number: ''}">
+        <button :id="number" @click="number = (Math.round(Math.random() * 1000000))"> CSS Style </button>
+    </div>
+    
+    <!-- Challenge -->
+
+    <div x-data="{colors: ['red', 'green', 'blue']}">
+        <!-- Iterate over colors and display 40x40px boxes with given colors.  -->
+        <template x-for="color in colors">
+            <div class="box" :class="color"> Done </div>
+        </template>
+    </div>
+
+    <style>
+        .box {
+            width: 40px;
+            height: 40px;
+        }
+        .red {
+            background-color: red;
+        }
+        .green {
+            background-color: green;
+        }
+        .blue {
+            background-color: blue;
+        }
+    </style>
+
 </body>
 </html>
